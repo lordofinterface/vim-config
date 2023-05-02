@@ -1,10 +1,9 @@
 filetype plugin indent on " Filetype auto-detection
 syntax on " Syntax highlighting
 set re=0
+set mouse=a
 
 call plug#begin()
-  Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-  Plug 'junegunn/fzf.vim'
   Plug 'neoclide/coc.nvim', {'branch': 'release'}
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
@@ -14,7 +13,8 @@ call plug#begin()
   Plug 'leafgarland/typescript-vim'
   Plug 'maxmellon/vim-jsx-pretty'
   Plug 'tpope/vim-commentary'
-  Plug 'airblade/vim-gitgutter'
+  Plug 'junegunn/fzf.vim'
+  Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 call plug#end()
 
 set tabstop=2
@@ -58,8 +58,6 @@ let mapleader = ","
 nnoremap ; :
 vnoremap ; :
 
-nmap <C-L> :GFiles<CR>
-nmap <C-K> :Files %:p:h<CR>
 " So we don't have to reach for escape to leave insert mode.
 inoremap jj <esc>
 
@@ -93,10 +91,13 @@ set signcolumn=yes
 
 inoremap <silent><expr> <CR> coc#pum#visible() ? coc#pum#confirm()
                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
 autocmd CursorHold * silent call CocActionAsync('highlight')
+
+nnoremap <silent> <C-f> :GFiles<CR>
+nnoremap <silent> <C-d> :Rg<CR>
+
 nmap <leader>rn <Plug>(coc-rename)
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gt <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
@@ -113,7 +114,3 @@ function! ShowDocumentation()
     call feedkeys('K', 'in')
   endif
 endfunction
-
-let g:gitgutter_sign_added = '+'
-let g:gitgutter_sign_modified = '>'
-let g:gitgutter_sign_removed = '-'
